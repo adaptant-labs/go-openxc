@@ -55,7 +55,7 @@ func (d *traceDriver) Read() (VehicleMessage, error) {
 }
 
 func (d *traceDriver) Reset() error {
-	ofs, err := d.traceFile.Seek(io.SeekStart, 0)
+	_, err := d.traceFile.Seek(io.SeekStart, 0)
 	d.dec = json.NewDecoder(d.traceFile)
 	return err
 }
