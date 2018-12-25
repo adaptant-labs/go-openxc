@@ -1,6 +1,10 @@
 # go-openxc
 
+[![Build Status](https://travis-ci.com/adaptant-labs/go-openxc.svg?branch=master)](https://travis-ci.com/adaptant-labs/go-openxc)
+
 go-openxc is a simple Go library for working with the [OpenXC](https://github.com/openxc) Platform.
+
+<img src="https://raw.githubusercontent.com/adaptant-labs/go-openxc/master/go-openxc-logo.png" width="200">
 
 This implementation is far less mature than the official libraries and bindings
 provided by the OpenXC project, but is a first step in enabling the use of
