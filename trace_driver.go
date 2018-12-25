@@ -43,10 +43,6 @@ func (d *traceDriver) Open(dsn string) error {
 func (d *traceDriver) Read() (VehicleMessage, error) {
 	var msg VehicleMessage
 
-	if d.dec == nil {
-		d.dec = json.NewDecoder(d.traceFile)
-	}
-
 	err := d.dec.Decode(&msg)
 	if err == io.EOF {
 		return VehicleMessage{}, err
@@ -56,6 +52,12 @@ func (d *traceDriver) Read() (VehicleMessage, error) {
 	}
 
 	return msg, nil
+}
+
+func (d *traceDriver) Reset() error {
+	ofs, err := d.traceFile.Seek(io.SeekStart, 0)
+	d.dec = json.NewDecoder(d.traceFile)
+	return err
 }
 
 func (d *traceDriver) Close() error {

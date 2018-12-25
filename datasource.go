@@ -48,6 +48,7 @@ type DataSourceDriver interface {
 	Open(name string) error
 	Close() error
 	Read() (VehicleMessage, error)
+	Reset() error
 }
 
 func openDataSourceConnection(conn dataSourceConnector) *DataSource {
@@ -80,6 +81,13 @@ func OpenDataSource(driverName, dataSourceName string) (*DataSource, error) {
 // return with an EOF when the stream runs out.
 func (ds *DataSource) ReadDataSource() (VehicleMessage, error) {
 	return ds.driver.Read()
+}
+
+// ResetDataSource provides a reset/rewind mechanism for the data source. This
+// can be useful when dealing with static data that must be replayed multiple
+// times, either in a loop, or on a per-connection basis.
+func (ds *DataSource) ResetDataSource() error {
+	return ds.driver.Reset()
 }
 
 // CloseDataSource closes the data source. Each caller that has opened the data
