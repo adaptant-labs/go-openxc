@@ -2,7 +2,7 @@
 
 [![godoc](https://godoc.org/github.com/adaptant-labs/go-openxc?status.svg)](http://godoc.org/github.com/adaptant-labs/go-openxc)
 [![Build Status](https://travis-ci.com/adaptant-labs/go-openxc.svg?branch=master)](https://travis-ci.com/adaptant-labs/go-openxc)
-[![Go Report Card](https://goreportcard.com/report/github.com/adaptant-labs/go-openxc)](https://goreportcard.com/report/github.com/adaptant-labs/go-openxc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/adaptant-labs/go-openxc)](https://goreportcard.com/report/github.com/adaptant-labs/go-openxc)
 
 go-openxc is a simple Go library for working with the [OpenXC](https://github.com/openxc) Platform.
 
