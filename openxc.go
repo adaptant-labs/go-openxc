@@ -12,8 +12,8 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-// The openxc package provides a simple API for working with data from the
-// OpenXC platform.
+// Package openxc provides a simple API for working with data from the OpenXC
+// platform.
 package openxc
 
 import (
@@ -22,17 +22,17 @@ import (
 
 // VehicleState contains basic state information about a given vehicle.
 type VehicleState struct {
-	HeadlampStatus			bool
-	HighBeamStatus			bool
-	WindshieldWiperStatus		bool
-	BrakePedalStatus		bool
+	HeadlampStatus        bool
+	HighBeamStatus        bool
+	WindshieldWiperStatus bool
+	BrakePedalStatus      bool
 
-	DoorStatus			string
-	IgnitionStatus			string
-	TurnSignalStatus		string
+	DoorStatus       string
+	IgnitionStatus   string
+	TurnSignalStatus string
 
-	GearLevelPosition		string
-	TransmissionGearPosition	string
+	GearLevelPosition        string
+	TransmissionGearPosition string
 }
 
 // VehicleMessage is the top-level wrapper for the OpenXC messaging format. Two
@@ -45,9 +45,9 @@ type VehicleState struct {
 // Extended vehicle messages:
 //	{"name": "headlamp_status", "value": false, "event": false}
 type VehicleMessage struct {
-	Name	string		`json:"name",required`
-	Value	interface{}	`json:"value",required`
-	Event	bool		`json:"event",omitempty"`
+	Name  string
+	Value interface{}
+	Event bool
 }
 
 // VehicleMessageToState updates the VehicleState information with the contents
@@ -55,17 +55,17 @@ type VehicleMessage struct {
 func VehicleMessageToState(state *VehicleState, msg VehicleMessage) {
 	switch msg.Name {
 	case "headlamp_status":
-		state.HeadlampStatus = msg.Value.(bool);
+		state.HeadlampStatus = msg.Value.(bool)
 	case "high_beam_status":
-		state.HighBeamStatus = msg.Value.(bool);
+		state.HighBeamStatus = msg.Value.(bool)
 	case "brake_pedal_status":
-		state.BrakePedalStatus = msg.Value.(bool);
+		state.BrakePedalStatus = msg.Value.(bool)
 	case "windshield_wiper_status":
-		state.WindshieldWiperStatus = msg.Value.(bool);
+		state.WindshieldWiperStatus = msg.Value.(bool)
 	case "door_status":
-		state.DoorStatus = msg.Value.(string);
+		state.DoorStatus = msg.Value.(string)
 	case "ignition_status":
-		state.IgnitionStatus = msg.Value.(string);
+		state.IgnitionStatus = msg.Value.(string)
 	default:
 		fmt.Println("unhandled message for type", msg.Name)
 	}

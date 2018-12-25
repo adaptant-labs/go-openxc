@@ -5,7 +5,7 @@ import (
 )
 
 func TestOpenXC(t *testing.T) {
-	var state VehicleState;
+	var state VehicleState
 
 	ds, err := OpenDataSource("trace", "trace-simple.json")
 	if err != nil {
@@ -26,8 +26,8 @@ func TestOpenXC(t *testing.T) {
 
 	// A simple sanity check to ensure that the vehicle state matches
 	// matches the settings in the sample trace log
-	if (state.HeadlampStatus != true ||
-	    state.HighBeamStatus != false) {
+	if state.HeadlampStatus != true ||
+		state.HighBeamStatus != false {
 		t.Error("state does not match expectations")
 		t.FailNow()
 	}

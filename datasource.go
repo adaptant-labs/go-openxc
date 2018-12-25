@@ -12,48 +12,46 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-// The datasources package provides a generic interface for the management of
-// OpenXC data sources.
-//
-// The datasources package must be used in combination with a datasource
-// driver, some of which are included within this distribution.
 package openxc
 
 import (
-	"sync"
 	"fmt"
+	"sync"
 )
 
 var (
-	drivers_mutex	sync.RWMutex
-	drivers		= make(map[string]DataSource_Driver)
+	driversMutex sync.RWMutex
+	drivers       = make(map[string]DataSourceDriver)
 )
 
 type dataSourceConnector struct {
-	name		string
-	driver		DataSource_Driver
+	name   string
+	driver DataSourceDriver
 }
 
-func (ds dataSourceConnector) Connect() (error) {
+func (ds dataSourceConnector) Connect() error {
 	return ds.driver.Open(ds.name)
 }
 
-func (ds dataSourceConnector) Disconnect() (error) {
+func (ds dataSourceConnector) Disconnect() error {
 	return ds.driver.Close()
 }
 
+// DataSource provides a generic interface for the management of OpenXC data
+// sources.
 type DataSource struct {
-	driver		DataSource_Driver
+	driver DataSourceDriver
 }
 
-type DataSource_Driver interface {
-	Open(name string)(error)
-	Close()(error)
-	Read()(VehicleMessage, error)
+// DataSourceDriver provides the backing driver interface for each DataSource.
+type DataSourceDriver interface {
+	Open(name string) error
+	Close() error
+	Read() (VehicleMessage, error)
 }
 
 func openDataSourceConnection(conn dataSourceConnector) *DataSource {
-	ds := &DataSource{driver: conn.driver};
+	ds := &DataSource{driver: conn.driver}
 
 	err := conn.driver.Open(conn.name)
 	if err != nil {
@@ -64,22 +62,28 @@ func openDataSourceConnection(conn dataSourceConnector) *DataSource {
 	return ds
 }
 
+// OpenDataSource opens the named DataSource
 func OpenDataSource(driverName, dataSourceName string) (*DataSource, error) {
-	drivers_mutex.RLock()
+	driversMutex.RLock()
 	drv, ok := drivers[driverName]
-	drivers_mutex.RUnlock()
+	driversMutex.RUnlock()
 
 	if !ok {
-		return nil, fmt.Errorf("unknown driver %s", driverName);
+		return nil, fmt.Errorf("unknown driver %s", driverName)
 	}
 
 	return openDataSourceConnection(dataSourceConnector{name: dataSourceName, driver: drv}), nil
 }
 
+// ReadDataSource reads a single VehicleMessage from the data source stream.
+// This may be called multiple times to advance across the stream, and will
+// return with an EOF when the stream runs out.
 func (ds *DataSource) ReadDataSource() (VehicleMessage, error) {
 	return ds.driver.Read()
 }
 
+// CloseDataSource closes the data source. Each caller that has opened the data
+// source is responsible for closing it directly.
 func (ds *DataSource) CloseDataSource() error {
 	return ds.driver.Close()
 }
@@ -87,9 +91,9 @@ func (ds *DataSource) CloseDataSource() error {
 // RegisterDataSource makes a data source driver available under the specified
 // name. Only a single registration per unique name is supported, multiple
 // registrations under the same driver name will result in a panic.
-func RegisterDataSource(name string, drv DataSource_Driver) {
-	drivers_mutex.Lock()
-	defer drivers_mutex.Unlock()
+func RegisterDataSource(name string, drv DataSourceDriver) {
+	driversMutex.Lock()
+	defer driversMutex.Unlock()
 
 	if drv == nil {
 		panic("Register datasource not defined")

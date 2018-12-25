@@ -15,42 +15,42 @@
 package openxc
 
 import (
+	"encoding/json"
 	"fmt"
-	"os"
 	"io"
 	"log"
-	"encoding/json"
+	"os"
 )
 
-type TraceDriver struct {
-	traceFile	*os.File
-	dec		*json.Decoder
+type traceDriver struct {
+	traceFile *os.File
+	dec       *json.Decoder
 }
 
-func (d *TraceDriver) Open(dsn string) error {
+func (d *traceDriver) Open(dsn string) error {
 	traceFile, err := os.Open(dsn)
-	if (err != nil) {
+	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	d.traceFile = traceFile;
+	d.traceFile = traceFile
 	d.dec = json.NewDecoder(d.traceFile)
 
 	return nil
 }
 
-func (d *TraceDriver) Read() (VehicleMessage, error) {
-	var msg VehicleMessage;
+func (d *traceDriver) Read() (VehicleMessage, error) {
+	var msg VehicleMessage
 
 	if d.dec == nil {
 		d.dec = json.NewDecoder(d.traceFile)
 	}
 
 	err := d.dec.Decode(&msg)
-	if (err == io.EOF) {
-		return VehicleMessage{}, err;
-	} else if (err != nil) {
+	if err == io.EOF {
+		return VehicleMessage{}, err
+	} else if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
@@ -58,10 +58,10 @@ func (d *TraceDriver) Read() (VehicleMessage, error) {
 	return msg, nil
 }
 
-func (d *TraceDriver) Close() error {
+func (d *traceDriver) Close() error {
 	return d.traceFile.Close()
 }
 
 func init() {
-	RegisterDataSource("trace", &TraceDriver{})
+	RegisterDataSource("trace", &traceDriver{})
 }
