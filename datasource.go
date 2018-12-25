@@ -21,7 +21,7 @@ import (
 
 var (
 	driversMutex sync.RWMutex
-	drivers       = make(map[string]DataSourceDriver)
+	drivers      = make(map[string]DataSourceDriver)
 )
 
 type dataSourceConnector struct {
