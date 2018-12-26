@@ -6,6 +6,7 @@ import (
 
 func TestOpenXC(t *testing.T) {
 	var state VehicleState
+	var msg VehicleMessage
 
 	ds, err := OpenDataSource("trace", "trace-simple.json")
 	if err != nil {
@@ -16,18 +17,20 @@ func TestOpenXC(t *testing.T) {
 	defer ds.CloseDataSource()
 
 	for {
-		msg, err := ds.ReadDataSource()
+		err := ds.ReadDataSource(&msg)
 		if err != nil {
 			break
 		}
 
-		VehicleMessageToState(&state, msg)
+		err = VehicleMessageToState(&state, &msg)
+		if err != nil {
+			break
+		}
 	}
 
 	// A simple sanity check to ensure that the vehicle state matches
 	// matches the settings in the sample trace log
-	if state.HeadlampStatus != true ||
-		state.HighBeamStatus != false {
+	if state.TransmissionGearPosition != "first" {
 		t.Error("state does not match expectations")
 		t.FailNow()
 	}

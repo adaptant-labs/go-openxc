@@ -40,18 +40,16 @@ func (d *traceDriver) Open(dsn string) error {
 	return nil
 }
 
-func (d *traceDriver) Read() (VehicleMessage, error) {
-	var msg VehicleMessage
-
-	err := d.dec.Decode(&msg)
+func (d *traceDriver) Read(msg *VehicleMessage) (error) {
+	err := d.dec.Decode(msg)
 	if err == io.EOF {
-		return VehicleMessage{}, err
+		return err
 	} else if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 
-	return msg, nil
+	return nil
 }
 
 func (d *traceDriver) Reset() error {

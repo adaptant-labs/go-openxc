@@ -18,6 +18,7 @@ package openxc
 
 import (
 	"fmt"
+	"strconv"
 )
 
 // VehicleState contains basic state information about a given vehicle.
@@ -58,53 +59,57 @@ type VehicleState struct {
 //	{"name": "headlamp_status", "value": false, "event": false}
 type VehicleMessage struct {
 	Name  string
-	Value interface{}
+	Value string
 	Event bool
 }
 
 // VehicleMessageToState updates the VehicleState information with the contents
 // of a single VehicleMessage.
-func VehicleMessageToState(state *VehicleState, msg VehicleMessage) {
+func VehicleMessageToState(state *VehicleState, msg *VehicleMessage) error {
+	var err error = nil
+
 	switch msg.Name {
 	case "headlamp_status":
-		state.HeadlampStatus = msg.Value.(bool)
+		state.HeadlampStatus, err = strconv.ParseBool(msg.Value)
 	case "high_beam_status":
-		state.HighBeamStatus = msg.Value.(bool)
+		state.HighBeamStatus, err = strconv.ParseBool(msg.Value)
 	case "brake_pedal_status":
-		state.BrakePedalStatus = msg.Value.(bool)
+		state.BrakePedalStatus, err = strconv.ParseBool(msg.Value)
 	case "windshield_wiper_status":
-		state.WindshieldWiperStatus = msg.Value.(bool)
+		state.WindshieldWiperStatus, err = strconv.ParseBool(msg.Value)
 	case "parking_brake_status":
-		state.ParkingBrakeStatus = msg.Value.(bool)
+		state.ParkingBrakeStatus, err = strconv.ParseBool(msg.Value)
 	case "door_status":
-		state.DoorStatus = msg.Value.(string)
+		state.DoorStatus = msg.Value
 	case "ignition_status":
-		state.IgnitionStatus = msg.Value.(string)
+		state.IgnitionStatus = msg.Value
 	case "gear_lever_position":
-		state.GearLeverPosition = msg.Value.(string)
+		state.GearLeverPosition = msg.Value
 	case "transmission_gear_position":
-		state.TransmissionGearPosition = msg.Value.(string)
+		state.TransmissionGearPosition = msg.Value
 	case "fuel_level":
-		state.FuelLevel = msg.Value.(float64)
+		state.FuelLevel, err = strconv.ParseFloat(msg.Value, 64)
 	case "latitude":
-		state.Latitude = msg.Value.(float64)
+		state.Latitude, err = strconv.ParseFloat(msg.Value, 64)
 	case "longitude":
-		state.Longitude = msg.Value.(float64)
+		state.Longitude, err = strconv.ParseFloat(msg.Value, 64)
 	case "accelerator_pedal_position":
-		state.AcceleratorPedalPosition = msg.Value.(float64)
+		state.AcceleratorPedalPosition, err = strconv.ParseFloat(msg.Value, 64)
 	case "engine_speed":
-		state.EngineSpeed = msg.Value.(float64)
+		state.EngineSpeed, err = strconv.ParseFloat(msg.Value, 64)
 	case "vehicle_speed":
-		state.VehicleSpeed = msg.Value.(float64)
+		state.VehicleSpeed, err = strconv.ParseFloat(msg.Value, 64)
 	case "fuel_consumed_since_restart":
-		state.FuelConsumedSinceRestart = msg.Value.(float64)
+		state.FuelConsumedSinceRestart, err = strconv.ParseFloat(msg.Value, 64)
 	case "odometer":
-		state.Odometer = msg.Value.(float64)
+		state.Odometer, err = strconv.ParseFloat(msg.Value, 64)
 	case "steering_wheel_angle":
-		state.SteeringWheelAngle = msg.Value.(float64)
+		state.SteeringWheelAngle, err = strconv.ParseFloat(msg.Value, 64)
 	case "torque_at_transmission":
-		state.TorqueAtTransmission = msg.Value.(float64)
+		state.TorqueAtTransmission, err = strconv.ParseFloat(msg.Value, 64)
 	default:
 		fmt.Println("unhandled message for type", msg.Name)
 	}
+
+	return err
 }

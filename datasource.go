@@ -47,7 +47,7 @@ type DataSource struct {
 type DataSourceDriver interface {
 	Open(name string) error
 	Close() error
-	Read() (VehicleMessage, error)
+	Read(*VehicleMessage) (error)
 	Reset() error
 }
 
@@ -79,8 +79,8 @@ func OpenDataSource(driverName, dataSourceName string) (*DataSource, error) {
 // ReadDataSource reads a single VehicleMessage from the data source stream.
 // This may be called multiple times to advance across the stream, and will
 // return with an EOF when the stream runs out.
-func (ds *DataSource) ReadDataSource() (VehicleMessage, error) {
-	return ds.driver.Read()
+func (ds *DataSource) ReadDataSource(msg *VehicleMessage) (error) {
+	return ds.driver.Read(msg)
 }
 
 // ResetDataSource provides a reset/rewind mechanism for the data source. This
