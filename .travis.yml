@@ -3,6 +3,7 @@ go:
 - master
 branches:
   only:
+  - gomobile-support
   - master
 notifications:
   slack:
